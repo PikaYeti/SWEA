@@ -1,4 +1,4 @@
-package D_0819;
+package SWEA;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
 
-public class Solution_5215_±è°¡¿¬ {
+public class Solution_5215_ê¹€ê°€ì—° {
 	
 	static boolean np(int [] cal, int n) {
 		int i = n - 1;

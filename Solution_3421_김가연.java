@@ -10,7 +10,7 @@ import java.util.StringTokenizer;
 public class Solution_3421_김가연 {
 	
 	static int [] barr;
-	static int bgcnt;
+	static int bgcnt;n 
 	static ArrayList<int[]> alist = new ArrayList<>();
 	
 	static void combination(boolean[] visit, int d, int n) {
