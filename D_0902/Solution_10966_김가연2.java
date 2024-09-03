@@ -1,8 +1,9 @@
-package D_0902;
+package SWEA.D_0902;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
@@ -67,14 +68,39 @@ public class Solution_10966_김가연2 {
 						int dy = t[1] + d[1];
 						if(ifmap(dx, dy, n, m)) {
 							if ((water[dx][dy] == 'L') && (visit[dx][dy] != 1)) {
+								visit[dx][dy] = 1;
+								if (answer[dx][dy] == 0) {
+									answer[dx][dy] = t[2] + 1;
+									findw.add(new int[] {dx, dy, t[2] + 1});
+								}
 								
+								if (answer[dx][dy] > (t[2] + 1)) {
+									answer[dx][dy] = t[2] + 1;
+									findw.add(new int[] {dx, dy, t[2] + 1});
+								}
 							}
 						}
 					}
 				}
 			}
 			
-			System.out.printf("#%d %d \n", test_case, sum);
+			for (int i = 0 ; i < n ; i ++) {
+				for (int j = 0 ; j < m ; j++) {
+					if (water[i][j] == 'W') {
+						`
+					}
+				}
+			}
+			
+			int cnt = 0;
+			
+			for (int i = 0 ; i < n ; i ++) {
+				for (int j = 0 ; j < m ; j++) {
+					cnt += answer[i][j];
+				}
+			}
+			
+			System.out.printf("#%d %d \n", test_case, cnt);
 		}
 
 	}

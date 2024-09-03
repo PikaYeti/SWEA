@@ -1,4 +1,4 @@
-package D_0829;
+package SWEA.D_0829;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,6 +10,97 @@ import java.util.Comparator;
 import java.util.StringTokenizer;
 
 public class Main_15686_김가연 {
+	
+	/*
+	 * 치킨집이 최대한 많아야 갈 수 있는 곳이 많아져 최소 거리가 작아지기 때문에
+	 * 주어진 M개의 치킨집 조합을 골라 나머지를 삭제시키며 최소거리를 다 구해보기
+	 * 
+	 */
+	
+	// 치킨집의 좌표 저장할 리스트 선언
+	static ArrayList<int[]> chi;
+	
+	// 집의 좌표 저장할 리스트 선언
+	static ArrayList<int[]> home;
+	
+	// 조합 선택 후 최종 최소 거리 저장해 줄 변수 선언
+	static int min = -1;
+	
+	static int m;
+	
+	// 방문배열, 몇번째 치킨집 돌고잇는지, 치킨집의 사이즈, 지금 치킨집을 몇개 살렸는지를 파라미터로 넣기
+	static void combination(boolean [] visit, int depth, int end, int choose) {
+		
+		// 만약 최대 치킨집 갯수만큼 선택되었거나 치킨집을 다 돌았다면 
+		if ((choose == m) || (depth == end)) {
+			
+			// 치킨집을 다 돌았지만 최대 치킨집 갯수만큼 선택되지 않았다면 리턴
+			if ((depth == end) && (choose < m)) {
+				return;
+			}
+			// 거리 저장해줄 변수 선언 후 초기화
+			int dis = 0;
+			// 현재 거리 저장해줄 변수 선언
+			int nowdis = 0;
+			// 현재 폐업 선택에서 최솟값 저장
+			int nowmin = 0;
+						
+			for (int i = 0 ; i < home.size() ; i++) {
+				// 집 좌표 꺼내오기
+				int [] h = home.get(i);
+				
+				// 거리 저장해줄 변수 초기화
+				dis = 0;
+				for (int j = 0 ; j < end ; j++) {
+					
+					// 현재 치킨집과의 거리 저장해 줄 변수 초기화
+					nowdis = 0;
+					// 만약 현재 치킨집이 폐업하지 않았다면
+					if (visit[j]) {
+						// 치킨집 좌표 꺼내오기
+						int [] c = chi.get(j);
+						nowdis = Math.abs(c[0] - h[0]) + Math.abs(c[1] - h[1]);
+						
+						// 만약 거리에 값이 저장되어 있지 않다면 현재 거리 저장
+						if (dis == 0) {
+							dis = nowdis;
+						}
+						
+						// 만약 저장된 치킨집과의 거리보다 현재 거리가 짧다면 현재 거리 저장하기
+						if (dis > nowdis) {
+							dis = nowdis;
+						}
+					}
+				}
+				// 현재 최소 거리의 합에 방금 구한 치킨집과의 거리 더해주기
+				nowmin += dis;
+                
+                if ((nowmin > min) && (min != -1)) {
+					return;
+				}
+			}
+			
+			// 만약 최종 최소 거리가 설정되지 않은 상태라면 거리 저장
+			if (min == -1) {
+				min = nowmin;
+			}
+			
+			// 최종 최소 거리보다 현재 최소 거리가 작다면 거리 저장
+			if (min > nowmin) {
+				min = nowmin;
+			}
+			
+			return;
+		}
+			
+			// 만약 방문했다면 살린 치킨집 갯수 + 1 하고 다음 치킨집을 찾아 재귀 돌려주기
+			visit[depth] = true;
+			combination(visit, depth + 1, end, choose + 1);
+			
+			// 만약 방문하지 않았다면 살린 치킨집갯수 올리지 않고 다음 치킨집 찾아 재귀 돌려주기
+			visit[depth] = false;
+			combination(visit, depth + 1, end, choose);
+	}
 
 	public static void main(String[] args) throws IOException {
 		
@@ -22,101 +113,47 @@ public class Main_15686_김가연 {
 		// 도시 정보 받아줄 배열 선언
 		int [][] city = new int [n][n];
 		// 도시의 남아야 치킨집의 수 
-		int m = Integer.parseInt(st.nextToken());
+		m = Integer.parseInt(st.nextToken());
 		
-		ArrayList[][] info = new ArrayList[n][n];
-		for(int i = 0 ; i < n ; i++) {
-			for (int j = 0 ; j < n ; j ++) {
-				info[i][j] = new ArrayList<Integer>();
-			}
-		}
+		// 선언한 리스트들 초기화 시켜주기
+		home = new ArrayList<>();
+		chi = new ArrayList<>();
 		
-		ArrayList<int[]> home = new ArrayList<>();
-		ArrayList<int[]> chi = new ArrayList<>();
-		
+		// 도시 정보 저장하기
 		for (int i = 0 ; i < n ; i++) {
 			StringTokenizer st1 = new StringTokenizer(bf.readLine());
 			for (int j = 0 ; j < n ; j++) {
 				city[i][j] = Integer.parseInt(st1.nextToken());
+				// 만약 집 좌표가 나타나면 좌표를 홈 리스트에 추가
 				if (city[i][j] == 1) {
 					home.add(new int[] {i, j});
+					
+				// 만약 치킨집의 좌표가 나타나면 좌표를 치킨집 리스트에 추가
 				} else if (city[i][j] == 2)  {
 					chi.add(new int[] {i, j});
 				}
 			}
 		}
 		
-		int dis = 0;
-		ArrayList<int[]> mindis = new ArrayList<>();
+		// 치킨집의 갯수 end 변수에 저장하기
+		int end = chi.size();
 		
-		for (int i = 0 ; i < chi.size() ; i++) {
-			int [] c = chi.get(i);
-			for (int j = 0 ; j < home.size() ; j++) {
-				int [] h = home.get(j);
-				dis = Math.abs(c[0] - h[0]) + Math.abs(c[1] - h[1]);
-				if (j == 0) {
-					info[c[0]][c[1]].add(dis);
-					info[c[0]][c[1]].add(1);
-				} else {
-					int bdis = (int) info[c[0]][c[1]].get(0);
-					if (bdis > dis) {
-						info[c[0]][c[1]].set(0, dis);
-						info[c[0]][c[1]].set(1, 1);
-					} else if (bdis == dis) {
-						info[c[0]][c[1]].set(1, (int)info[c[0]][c[1]].get(1) + 1);
-					}
-				}
-			}
-			mindis.add(new int[] {(int) info[c[0]][c[1]].get(0), (int) info[c[0]][c[1]].get(1), c[0], c[1]});
-		}
-
-		Collections.sort(mindis, new Comparator<int[]>() {
-			@Override
-			public int compare(int[] o1, int[] o2) {
-				if (o1[1] == o2[1]) {
-					if (o1[0] == o2[0]) {
-						if (o1[2] == o2[2]) {
-							return Math.abs(o1[3] - (int)(n / 2)) -  Math.abs(o2[3] - (int)(n / 2));
-						}
-						else {
-							return Math.abs(o1[2] - (int)(n / 2)) -  Math.abs(o2[2] - (int)(n / 2));
-						}
-					} else {
-						return o1[0] - o2[0];
-					}
-				} else {
-					return o2[1] - o1[1];
-				}
-			}
-		});
+		// 조합에서 몇번째 치킨집을 방문했는지 체크할 방문 배열 boolean으로 생성
+		boolean [] visit = new boolean[end];
 		
-		for (int i = 0 ; i < mindis.size() ; i++) {
-			System.out.println(Arrays.toString(mindis.get(i)));
+		// 몇번째 치킨집인지를 확인할 치킨집의 인덱스가 담긴 chicken 배열 생성 후 인덱스로 초기화
+		int [] chicken = new int [end];
+		for (int i = 0 ; i < end ; i++) {
+			chicken[i] = i;
 		}
 		
-		int sum = 0;
-		int cdis = 0;
+		// 최종 최소 거리 값 변수 초기화
+		min = -1;
 		
-		for (int i = 0 ; i < home.size() ; i++) {
-			int [] h = home.get(i);
-			int min = -1;
-			for (int j = 0 ; j < m ; j++) {
-				int [] c = mindis.get(j);
-				cdis = Math.abs(h[0] - c[2]) + Math.abs(h[1] - c[3]);
-				
-				if (min == -1) {
-					min = cdis;
-				}
-				
-				if (cdis < min) {
-					min = cdis;
-				}
-			}
-			sum += min;
-		}
+		// 조합 함수 불러오기
+		combination(visit, 0, end, 0);
 		
-		System.out.println(sum);
-
+		System.out.println(min);
 	}
 
 }

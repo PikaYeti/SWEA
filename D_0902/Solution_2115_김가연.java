@@ -14,20 +14,26 @@ public class Solution_2115_김가연 {
 	static int max;
 	static int c;
 	
+	// 선택할 수 있는 꿀 중에서 조합을 돌리는 함수
 	static void combi(boolean [] visit, int depth, int r, int sum, int cnt) {
 		
+		// 만약 최대 꿀 양 모다 많으면 그대로 리턴
 		if (sum > c) {
 			return;
 		}
 		
+		
+		// 모을수 있는 꿀 칸을 다 ㅁ았으면
 		if (depth == r) {
 			
+			// 만약 0칸, 전부 다 선택했다면 리턴
 			if ((cnt < 1) || (cnt == r)) {
 				return;
 			}
 			
 			int sumall = 0;
 			
+			// 선택한 꿀 칸 제곱해서 더해주기
 			for (int i = 0 ; i < visit.length ; i++) {
 				if (visit[i]) {
 					sumall += Math.pow(arr[i], 2);
@@ -38,12 +44,14 @@ public class Solution_2115_김가연 {
 				max = sumall;
 			}
 			
+			// 최댓값 설정
 			if (max < sumall) {
 				max = sumall;
 			}
 			return;
 		}
 		
+		// 부분조합으로 선택해주기
 		for (int i = depth ; i < r ; i ++) {
 			
 			visit[i] = true;
@@ -118,6 +126,7 @@ public class Solution_2115_김가연 {
 						combi(visit, 0, m, sum, 0);
 						
 						honey.add(new int[] {i, j, max});
+					// 꿀양이 최대 양과 같다면 그냥 그대로 제곱해서 더해주기
 					} else {
 						for (int k = j ; k < j + m ; k ++) {
 							maxp += Math.pow(bee[i][k], 2);
@@ -127,17 +136,22 @@ public class Solution_2115_김가연 {
 				}
 			}
 			
+			// 꿀양 기준으로 내림차순 정렬
 			Collections.sort(honey, ((o1, o2) -> Integer.compare(o2[2], o1[2])));
 			
+			// 맨 위에 있는 원소과 최대값이므로 빼주기
 			int [] mh = honey.get(0);
 			int answer = 0;
 			
+			// 두번째 원소가 그 다음 최댓값이므로 빼주기
 			for (int i = 1 ; i < honey.size() ; i++) {
 				int [] nh = honey.get(i);
 				
+				// X 좌표가 다르다면 상관없으니 그냥 빼주기
 				if (mh[0] != nh[0]) {
 					answer = mh[2] + nh[2];
 					break;
+				// 만약 X좌표가 같지만 Y좌표가 M이상 차이난다면 겹치지 않으니 그대로 빼주기
 				} else {
 					if (Math.abs(mh[1] - nh[1]) >= m) {
 						answer = mh[2] + nh[2];
@@ -145,7 +159,7 @@ public class Solution_2115_김가연 {
 					}
 				}
 			}
-			
+			// 출력
 			System.out.printf("#%d %d \n", test_case, answer);
 			
 			
