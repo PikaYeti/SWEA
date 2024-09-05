@@ -18,9 +18,6 @@ public class Solution_1494_김가연2 {
 			return;
 		}
 		
-		if ((select > 0) && (depth >= az.size())) {
-			return;
-		}
 		
 		if (select == 0) {
 			
