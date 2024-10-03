@@ -80,7 +80,6 @@ public class Solution_1953_김가연 {
 			m = Integer.parseInt(st.nextToken());
 			
 			int [][] prison = new int [n][m];
-			char [][] draw = new char [n][m];
 			boolean [][] visit = new boolean [n][m];
 			
 			int px = Integer.parseInt(st.nextToken());
@@ -92,24 +91,6 @@ public class Solution_1953_김가연 {
 				st = new StringTokenizer(bf.readLine());
 				for (int j = 0 ; j < m ; j++) {
 					prison[i][j] = Integer.parseInt(st.nextToken());
-					
-					if (prison[i][j] == 0) {
-						
-					} else if (prison[i][j] == 1) {
-						draw[i][j] = '+';
-					} else if (prison[i][j] == 2) {
-						draw[i][j] = 'ㅣ';
-					} else if (prison[i][j] == 3) {
-						draw[i][j] = 'ㅡ';
-					} else if (prison[i][j] == 4) {
-						draw[i][j] = '└';
-					} else if (prison[i][j] == 5) {
-						draw[i][j] = '┏';
-					} else if (prison[i][j] == 6) {
-						draw[i][j] = '┐';
-					} else {
-						draw[i][j] = '┘';
-					}
 				}
 			}
 			
